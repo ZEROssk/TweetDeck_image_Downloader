@@ -21,7 +21,7 @@
 	let SCRIPT_NAME	= 'EZ_Twitter_Image_Downloader';
 	let IFRAME_NAME	= SCRIPT_NAME + '_download_frame';
 
-    const re = new RegExp('https?://pbs.twimg.com/media/[-_.!~*\'()a-zA-Z0-9;\/:\@&=+\$,%#]+.jpg');
+    const imgRe = new RegExp('https?://pbs.twimg.com/media/[-_.!~*\'()a-zA-Z0-9;\/:\@&=+\$,%#]+.jpg');
 
 	if(window !== window.parent){
 		// iframe functions
@@ -137,7 +137,6 @@
 		let createButton = function(list){
 			// get photo container
 			let imgs = list.parentNode.parentNode.parentNode.parentNode.getElementsByClassName('js-media-image-link');
-            console.log("imgs: ", imgs)
 
 			// return if image not found
 			if(imgs.length == 0) return undefined;
@@ -169,20 +168,18 @@
 				// if not press shift key
 				if(!(event || window.event).shiftKey){
 					let tweetDivElement = getTweetElementByListElement(list);
-                    console.log(tweetDivElement)
 
 					let tweetId = tweetDivElement.getAttribute('data-tweet-id');
-                    console.log(tweetId)
-
-                    let userName = tweetDivElement.getElementsByClassName('username txt-mute').textContent;
-                    console.log(userName)
+                    let accountLink = tweetDivElement.getElementsByClassName('username');
+                    var userName = accountLink[0].textContent;
+                    console.log("username: ", userName)
 
 					if(!originalTweetUserCheckByBlackList(userName)) return;
 
 					iframeClear();
 					for(let i = 0;i < imgs.length;i++)
                         var url = imgs[i].getAttribute('style');
-                        let imgurl = url.match(re)
+                        let imgurl = url.match(imgRe)
 						iframeAdd(imgurl, userName, tweetId);
 
 				}else{
@@ -190,7 +187,7 @@
 
 					for(let i = lastIndex;0 <= i;i--){
 						let url = imgs[i].getAttribute('style');
-                        let imgurl = url.match(re)
+                        let imgurl = url.match(imgRe)
 						window.open(imgurl);
 					}
 
@@ -245,7 +242,6 @@
 
 			// get action list
 			lists = findNode.getElementsByClassName('js-tweet-actions tweet-actions');
-            console.log("lists: ", lists)
 
 			for(let i = 0;i < lists.length;i++){
 				let list = lists[i];
