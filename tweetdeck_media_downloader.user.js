@@ -136,7 +136,8 @@
 		// create button element
 		let createButton = function(list){
 			// get photo container
-			let imgs = list.parentNode.parentNode.parentNode.parentNode.getElementsByClassName('js-media-image-link');
+			//let imgs = list.parentNode.parentNode.parentNode.parentNode.getElementsByClassName('js-media-image-link');
+            let imgs = list.parentNode.parentNode.parentNode.getElementsByClassName('js-media-image-link');
 
 			// return if image not found
 			if(imgs.length == 0) return undefined;
@@ -175,17 +176,16 @@
 					if(!originalTweetUserCheckByBlackList(userName)) return;
 
 					iframeClear();
-					for(let i = 0;i < imgs.length;i++)
-                        var url = imgs[i].getAttribute('style');
-                        let imgurl = url.match(imgRe)
-						iframeAdd(imgurl, userName, tweetId);
+					for(let i = 0;i < imgs.length;i++) {
+                        var url = imgs[i].getAttribute('style').match(imgRe)[0];
+						iframeAdd(url, userName, tweetId);
+                    }
 
 				}else{
 					let lastIndex = (imgs.length - 1);
 
 					for(let i = lastIndex;0 <= i;i--){
-						let url = imgs[i].getAttribute('style');
-                        let imgurl = url.match(imgRe)
+						let imgurl = imgs[i].getAttribute('style').match(imgRe) + ':orig';
 						window.open(imgurl);
 					}
 
@@ -321,5 +321,4 @@
 		addButtons(document);
 	}
 })();
-//document.getElementsByClassName('js-media-image-link block med-link media-item media-size-medium   is-zoomable');
 
