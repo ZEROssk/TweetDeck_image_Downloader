@@ -1,9 +1,15 @@
 // ==UserScript==
-// @name		deck test
+// @name		Ez Twimg Downloader DECK
+// @description	ツイッターの画像を簡単に保存するUserScriptです。
+// @author		ZEROssk
+// @namespace	http://zerono.teamfruit.net
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
+// @version		1.0
+// @grant		none
+// @license		MIT License
+// @updateURL
 // ==/UserScript==
-
 ;(function() {
 	'use strict';
 
@@ -18,7 +24,7 @@
 	];
 
 	// CONST VALUES
-	let SCRIPT_NAME	= 'EZ_Twitter_Image_Downloader';
+	let SCRIPT_NAME	= 'EZ_Twitter_Image_Downloader_DECK';
 	let IFRAME_NAME	= SCRIPT_NAME + '_download_frame';
 
     const imgRe = new RegExp('https?://pbs.twimg.com/media/[-_.!~*\'()a-zA-Z0-9;\/:\@&=+\$,%#]+.jpg');
