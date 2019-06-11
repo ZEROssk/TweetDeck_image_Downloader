@@ -155,9 +155,9 @@
 
 			btn.innerHTML =
 				'<button class="ProfileTweet-actionButton js-actionButton" type="button">' +
-					'<div class="IconContainer js-tooltip" title="Extract Images">' +
-						'<span class="Icon Icon--medium Icon--media"></span>&nbsp;' +
-					'</div>' +
+					//'<div class="IconContainer js-tooltip" title="Extract Images">' +
+						//'<span class="Icon Icon--medium Icon--media"></span>&nbsp;' +
+					//'</div>' +
 					'<span class="ProfileTweet-actionCount">' +
 						'<span class="ProfileTweet-actionCountForPresentation">' + imgs.length + '</span>' +
 					'</span>' +
@@ -170,9 +170,7 @@
 					let tweetDivElement = getTweetElementByListElement(list);
 
 					let tweetId = tweetDivElement.getAttribute('data-tweet-id');
-                    let accountLink = tweetDivElement.getElementsByClassName('username');
-                    var userName = accountLink[0].textContent;
-                    console.log("username: ", userName)
+                    let userName = tweetDivElement.getElementsByClassName('username')[0].textContent.substring(1);
 
 					if(!originalTweetUserCheckByBlackList(userName)) return;
 
@@ -242,6 +240,10 @@
 
 			// get action list
 			lists = findNode.getElementsByClassName('js-tweet-actions tweet-actions');
+
+            if(lists.length == 0) {
+                lists = findNode.getElementsByClassName('tweet-detail-actions');
+            }
 
 			for(let i = 0;i < lists.length;i++){
 				let list = lists[i];
@@ -320,3 +322,4 @@
 	}
 })();
 //document.getElementsByClassName('js-media-image-link block med-link media-item media-size-medium   is-zoomable');
+
