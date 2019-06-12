@@ -8,7 +8,7 @@
 // @version		1.0
 // @grant		none
 // @license		MIT License
-// @updateURL   https://github.com/ZEROssk/tweetdeck_image_downloader/raw/master/tweetdeck_media_downloader.user.js
+// @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
 // ==/UserScript==
 ;(function() {
 	'use strict';
