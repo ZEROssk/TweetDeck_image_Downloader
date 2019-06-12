@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name		Ez Twimg Downloader DECK
-// @description	ツイッターの画像を簡単に保存するUserScriptです。
+// @description	TweetDeckの画像を簡単に保存するUserScriptです。
 // @author		ZEROssk
 // @namespace	http://zerono.teamfruit.net
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		1.4
+// @version		1.5
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
