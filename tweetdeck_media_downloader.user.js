@@ -5,7 +5,7 @@
 // @namespace	http://zerono.teamfruit.net
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		1.5
+// @version		2.0
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -27,7 +27,7 @@
 	let SCRIPT_NAME	= 'EZ_Twitter_Image_Downloader_DECK';
 	let IFRAME_NAME	= SCRIPT_NAME + '_download_frame';
 
-    const imgRe = new RegExp('https?://pbs.twimg.com/media/[-_.!~*\'()a-zA-Z0-9;\/:\@&=+\$,%#]+.jpg');
+    const imgRe = new RegExp('https?://pbs.twimg.com/media/[-_.!~*\'()a-zA-Z0-9;\/:\@&=+\$,%#]+(.jpg|.png)');
 
 	if(window !== window.parent){
 		// iframe functions
@@ -180,7 +180,7 @@
 
 					iframeClear();
 					for(let i = 0;i < imgs.length;i++) {
-                        var url = imgs[i].getAttribute('style').match(imgRe)[0];
+                        let url = imgs[i].getAttribute('style').match(imgRe)[0];
 						iframeAdd(url, userName, tweetId);
                     }
 
