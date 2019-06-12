@@ -5,7 +5,7 @@
 // @namespace	http://zerono.teamfruit.net
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		1.0
+// @version		1.4
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -162,9 +162,6 @@
 
 			btn.innerHTML =
 				'<button class="ProfileTweet-actionButton js-actionButton" type="button">' +
-					//'<div class="IconContainer js-tooltip" title="Extract Images">' +
-						//'<span class="Icon Icon--medium Icon--media"></span>&nbsp;' +
-					//'</div>' +
 					'<span class="ProfileTweet-actionCount">' +
 						'<span class="ProfileTweet-actionCountForPresentation">' + imgs.length + '</span>' +
 					'</span>' +
