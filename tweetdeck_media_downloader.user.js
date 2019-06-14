@@ -5,11 +5,17 @@
 // @namespace	http://zerono.teamfruit.net
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		2.0
+// @version		2.3
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
 // ==/UserScript==
+
+// Original Code author
+//		yanorei32
+// Original Code
+//		https://gist.github.com/Yanorei32/ef72fa76511c1ce5d5d6d725c2fa8b88
+
 ;(function() {
 	'use strict';
 
@@ -158,14 +164,13 @@
 
 			let btn = document.createElement('li');
 
-			btn.setAttribute('class', 'ProfileTweet-action ProfileTweet-action--ExtractImages');
+			btn.setAttribute('class', 'tweet-action-item pull-left margin-r--0');
 
 			btn.innerHTML =
-				'<button class="ProfileTweet-actionButton js-actionButton" type="button">' +
-					'<span class="ProfileTweet-actionCount">' +
-						'<span class="ProfileTweet-actionCountForPresentation">' + imgs.length + '</span>' +
-					'</span>' +
-				'</button>'
+				'<a class="tweet-action ">' +
+					'<i class="icon icon-camera txt-center pull-left txt-size--17"></i>' +
+					'<span class="pull-right margin-l--2 margin-t--1 txt-size--12">' + imgs.length + '</span>' +
+                '</a>'
 			;
 
 			btn.addEventListener('click',function(event){
