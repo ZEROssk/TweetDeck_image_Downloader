@@ -5,7 +5,7 @@
 // @namespace	http://zerono.teamfruit.net
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		2.3
+// @version		2.4
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -20,7 +20,6 @@
 	'use strict';
 
 	// download filename format
-	// https://twitter.com/{userName}/status/{tweetId}
 	// https://pbs.twimg.com/media/{randomImageNameWithoutExtension}.{extension} or
 	// https://pbs.twimg.com/media/{randomImageName}
 	let FILENAME_FORMAT = 'Twitter-{tweetId}-{userName}-{randomImageNameWithoutExtension}.{extension}';
@@ -32,8 +31,6 @@
 	// CONST VALUES
 	let SCRIPT_NAME	= 'EZ_Twitter_Image_Downloader_DECK';
 	let IFRAME_NAME	= SCRIPT_NAME + '_download_frame';
-
-    const imgRe = new RegExp('https?://pbs.twimg.com/media/[-_.!~*\'()a-zA-Z0-9;\/:\@&=+\$,%#]+(.jpg|.png)');
 
 	if(window !== window.parent){
 		// iframe functions
@@ -137,9 +134,11 @@
 
 
 		let originalTweetUserCheckByBlackList = function(userName){
-			if(BLACK_LIST.includes(userName))
-				if(confirm(userName + 'はBLACK_LISTに登録されています。\nダウンロードを中止しますか？'))
+			if(BLACK_LIST.includes(userName)) {
+				if(confirm(userName + 'はBLACK_LISTに登録されています。\nダウンロードを中止しますか？')) {
 					return false;
+                }
+            }
 
 			return true;
 		};
@@ -148,11 +147,14 @@
 		// create button element
 		let createButton = function(list){
 			// get photo container
-			//let imgs = list.parentNode.parentNode.parentNode.parentNode.getElementsByClassName('js-media-image-link');
             let imgs = list.parentNode.parentNode.parentNode.getElementsByClassName('js-media-image-link');
+            let simg = list.parentNode.parentNode.parentNode.getElementsByClassName('media-img');
+            let gif = list.parentNode.parentNode.parentNode.getElementsByClassName('js-media-gif-container');
 
-			// return if image not found
-			if(imgs.length == 0) return undefined;
+			// return if media not found
+			if(imgs.length == 0 && simg.length == 0 && gif.length == 0) {
+                return undefined
+            }
 
 			let getTweetElementByListElement = function(elm){
 				while(1){
@@ -162,18 +164,28 @@
 				return elm;
 			}
 
-			let btn = document.createElement('li');
+            let btn = document.createElement('li');
 
 			btn.setAttribute('class', 'tweet-action-item pull-left margin-r--0');
 
-			btn.innerHTML =
-				'<a class="tweet-action ">' +
-					'<i class="icon icon-camera txt-center pull-left txt-size--17"></i>' +
-					'<span class="pull-right margin-l--2 margin-t--1 txt-size--12">' + imgs.length + '</span>' +
-                '</a>'
-			;
+            if(gif.length == 0) {
+		    	btn.innerHTML =
+				    '<a class="tweet-action ">' +
+					    '<i class="icon icon-image txt-center pull-left txt-size--17"></i>' +
+					    '<span class="pull-right margin-l--2 margin-t--1 txt-size--12">' + imgs.length + '</span>' +
+                    '</a>'
+			    ;
+            } else {
+                btn.innerHTML =
+				    '<a class="tweet-action ">' +
+					    '<i class="icon icon-image txt-center pull-left txt-size--17"></i>' +
+					    '<span class="pull-right margin-l--2 margin-t--1 txt-size--12">' + gif.length + '</span>' +
+                    '</a>'
+			    ;
+            }
 
 			btn.addEventListener('click',function(event){
+                const imgRe = new RegExp('https?://pbs.twimg.com/media/[-_.!~*\'()a-zA-Z0-9;\/:\@&=+\$,%#]+(.jpg|.png)');
 				// if not press shift key
 				if(!(event || window.event).shiftKey){
 					let tweetDivElement = getTweetElementByListElement(list);
@@ -184,19 +196,32 @@
 					if(!originalTweetUserCheckByBlackList(userName)) return;
 
 					iframeClear();
-					for(let i = 0;i < imgs.length;i++) {
-                        let url = imgs[i].getAttribute('style').match(imgRe)[0];
-						iframeAdd(url, userName, tweetId);
+                    if(simg.length != 0) {
+                        let surl = simg[0].getAttribute('src').match(imgRe)[0];
+                        iframeAdd(surl, userName, tweetId);
+                    } else if(imgs.length != 0) {
+                        for(let i = 0;i < imgs.length;i++) {
+                            let url = imgs[i].getAttribute('style').match(imgRe)[0];
+                            iframeAdd(url, userName, tweetId);
+                        }
+                    } else {
+                        let gifurl = gif[0].getElementsByClassName('js-media-gif')[0].getAttribute('src');
+                        iframeAdd(gifurl, userName, tweetId);
                     }
-
 				}else{
-					let lastIndex = (imgs.length - 1);
-
-					for(let i = lastIndex;0 <= i;i--){
-						let imgurl = imgs[i].getAttribute('style').match(imgRe) + ':orig';
-						window.open(imgurl);
-					}
-
+                    if(simg.length != 0) {
+                        let simgurl = simg[0].getAttribute('src').match(imgRe)[0];
+                        window.open(simgurl);
+                    } else if(imgs.length != 0) {
+                        let lastIndex = (imgs.length - 1);
+                        for(let i = lastIndex;0 <= i;i--){
+                            let imgurl = imgs[i].getAttribute('style').match(imgRe)[0] + ':orig';
+                            window.open(imgurl);
+                        }
+                    } else {
+                        let gifurl = gif[0].getElementsByClassName('js-media-gif')[0].getAttribute('src');
+                        window.open(gifurl);
+                    }
 				}
 			});
 
