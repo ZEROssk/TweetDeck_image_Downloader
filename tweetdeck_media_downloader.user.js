@@ -5,7 +5,7 @@
 // @namespace	http://zerono.teamfruit.net
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		2.4
+// @version		2.5
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -206,7 +206,7 @@
                         }
                     } else {
                         let gifurl = gif[0].getElementsByClassName('js-media-gif')[0].getAttribute('src');
-                        iframeAdd(gifurl, userName, tweetId);
+                        window.open(gifurl);
                     }
 				}else{
                     if(simg.length != 0) {
