@@ -5,7 +5,7 @@
 // @namespace	http://zerono.teamfruit.net
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		2.6
+// @version		2.7
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -171,15 +171,15 @@
 			if(gif.length == 0) {
 				btn.innerHTML =
 					'<a class="tweet-action ">' +
-					'<i class="icon icon-image txt-center pull-left txt-size--17"></i>' +
-					'<span class="pull-right margin-l--2 margin-t--1 txt-size--12">' + imgs.length + '</span>' +
+						'<i class="icon icon-image txt-center pull-left txt-size--17"></i>' +
+						'<span class="pull-right margin-l--2 margin-t--1 txt-size--12">' + imgs.length + '</span>' +
 					'</a>'
 				;
 			} else {
 				btn.innerHTML =
 					'<a class="tweet-action ">' +
-					'<i class="icon icon-image txt-center pull-left txt-size--17"></i>' +
-					'<span class="pull-right margin-l--2 margin-t--1 txt-size--12">' + gif.length + '</span>' +
+						'<i class="icon icon-image txt-center pull-left txt-size--17"></i>' +
+						'<span class="pull-right margin-l--2 margin-t--1 txt-size--12">' + gif.length + '</span>' +
 					'</a>'
 				;
 			}
@@ -236,9 +236,8 @@
 
 			btn.innerHTML =
 				'<a class="js-action-extractImage" role="button">' +
-				'<span class="Icon Icon--media Icon--small u-textUserColorHover">' +
-				'</span>' +
-				'<span class="u-hiddenVisually">画像保存</span>' +
+					'<span class="Icon Icon--media Icon--small u-textUserColorHover"></span>' +
+					'<span class="u-hiddenVisually">画像保存</span>' +
 				'</a>'
 			;
 
