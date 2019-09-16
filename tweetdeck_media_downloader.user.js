@@ -5,7 +5,7 @@
 // @namespace	http://zerono.teamfruit.net
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		2.7
+// @version		2.8
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -147,6 +147,7 @@
 		// create button element
 		let createButton = function(list){
 			// get photo container
+			let ActionItem = list.getElementsByClassName('tweet-action-item');
 			let imgs = list.parentNode.parentNode.parentNode.getElementsByClassName('js-media-image-link');
 			let simg = list.parentNode.parentNode.parentNode.getElementsByClassName('media-img');
 			let gif = list.parentNode.parentNode.parentNode.getElementsByClassName('js-media-gif-container');
@@ -154,6 +155,10 @@
 			// return if media not found
 			if(imgs.length == 0 && simg.length == 0 && gif.length == 0) {
 				return undefined
+			}
+
+			for(let i = 0;i < ActionItem.length;i++) {
+				ActionItem[i].className = "tweet-action-item pull-left margin-r--5";
 			}
 
 			let getTweetElementByListElement = function(elm){
@@ -166,7 +171,7 @@
 
 			let btn = document.createElement('li');
 
-			btn.setAttribute('class', 'tweet-action-item pull-left margin-r--0');
+			btn.setAttribute('class', 'tweet-action-item position-rel pull-left margin-r--0');
 
 			if(gif.length == 0) {
 				btn.innerHTML =
