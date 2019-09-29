@@ -5,7 +5,7 @@
 // @namespace	http://zerono.teamfruit.net
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		2.8
+// @version		2.8.1
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -190,7 +190,7 @@
 			}
 
 			btn.addEventListener('click',function(event){
-				const imgRe = new RegExp('https?://pbs.twimg.com/media/[-_.!~*\'()a-zA-Z0-9;\/:\@&=+\$,%#]+(.jpg|.png)');
+				const imgRe = new RegExp('https?://pbs.twimg.com/media/[-_!~*\'()a-zA-Z0-9;\/:\@&=+\$,%#]+');
 				const imgReS = new RegExp('https?://pbs.twimg.com/media/[-_.!~*\'()a-zA-Z0-9;\/:\@&=+\$,%#]+');
 				// if not press shift key
 				if(!(event || window.event).shiftKey){
@@ -206,7 +206,7 @@
 						iframeAdd(surl, userName, tweetId);
 					} else if(imgs.length != 0) {
 						for(let i = 0;i < imgs.length;i++) {
-							let url = imgs[i].getAttribute('style').match(imgRe)[0];
+							var url = imgs[i].getAttribute('style').match(imgRe)[0]+".jpg";
 							iframeAdd(url, userName, tweetId);
 						}
 					} else {
@@ -241,8 +241,8 @@
 
 			btn.innerHTML =
 				'<a class="js-action-extractImage" role="button">' +
-					'<span class="Icon Icon--media Icon--small u-textUserColorHover"></span>' +
-					'<span class="u-hiddenVisually">画像保存</span>' +
+				'<span class="Icon Icon--media Icon--small u-textUserColorHover"></span>' +
+				'<span class="u-hiddenVisually">画像保存</span>' +
 				'</a>'
 			;
 
