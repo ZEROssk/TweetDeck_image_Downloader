@@ -75,38 +75,6 @@
 		// iframe
 		let iframeDiv;
 
-		// write css
-		(function(){
-			let cssElem = document.createElement('style');
-
-			cssElem.innerHTML =
-				'.ProfileTweet-action--ExtractImages:hover:hover * {' +
-				'color : rgb(47,194,239);' +
-				'}' +
-				'.tweet.Tweet--invertedColors .ProfileTweet-action--ExtractImages:hover .ProfileTweet-actionButton {' +
-				'color : rgb(47,194,239);' +
-				'}' +
-				'.tweet.Tweet--invertedColors .ProfileTweet-action--ExtractImages:hover .ProfileTweet-actionCount {' +
-				'color : rgb(47,194,239);' +
-				'}' +
-				'.tweet.Tweet--invertedColors .ProfileTweet-action--ExtractImages .ProfileTweet-actionButton {' +
-				'color : #fff;' +
-				'}' +
-				'.tweet.Tweet--invertedColors .ProfileTweet-action--ExtractImages .ProfileTweet-actionCount {' +
-				'color : #fff;' +
-				'}' +
-				'.stream-container .AdaptiveStreamGridImage .grid-tweet-action.action-extractImage-container {' +
-				'margin: 6px 4px;' +
-				'}' +
-				'.stream-container .AdaptiveStreamGridImage .grid-tweet-actions {' +
-				'width: 110px !important;' +
-				'}'
-			;
-
-			document.documentElement.appendChild(cssElem);
-
-		})();
-
 		// write div for iframe
 		(function(){
 			iframeDiv = document.createElement('div');
