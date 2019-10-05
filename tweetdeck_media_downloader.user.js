@@ -5,7 +5,7 @@
 // @namespace	http://zerono.teamfruit.net
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		2.8.2
+// @version		2.8.3
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -202,43 +202,6 @@
 
 		};
 
-		let createButtonForStream = function(list){
-			let btn = document.createElement('li');
-
-			btn.setAttribute('class', 'action-extractImage-container grid-tweet-action');
-
-			btn.innerHTML =
-				'<a class="js-action-extractImage" role="button">' +
-				'<span class="Icon Icon--media Icon--small u-textUserColorHover"></span>' +
-				'<span class="u-hiddenVisually">画像保存</span>' +
-				'</a>'
-			;
-
-			btn.addEventListener('click',function(event){
-				let tweetElement = list.parentNode.parentNode;
-
-				// if not press shift key
-				if(!(event || window.event).shiftKey){
-					let imgBaseUrl = tweetElement.getAttribute('data-url');
-					let userName = tweetElement.getAttribute('data-screen-name');
-					let tweetId = tweetElement.getAttribute('data-tweet-id');
-
-					if(!originalTweetUserCheckByBlackList(userName)) return;
-
-					iframeClear();
-					iframeAdd(imgBaseUrl, userName, tweetId);
-
-				}else{
-					window.open(tweetElement.getAttribute('data-url') + ':orig');
-
-				}
-			});
-
-			return btn;
-
-
-		};
-
 		// add buttons 2 elem
 		let addButtons = function(findNode){
 			let lists;
@@ -273,26 +236,6 @@
 						list.getElementsByClassName('ProfileTweet-action--more')[0]
 					);
 
-				}
-			}
-
-			// get action list
-			lists = findNode.getElementsByClassName('grid-tweet-actions');
-
-			for(let i = 0;i < lists.length;i++){
-				let list = lists[i];
-
-				if(processedLists.has(list)) continue;
-
-				processedLists.set(list, 1);
-
-				let createdButton = createButtonForStream(list);
-
-				if(createdButton != undefined){
-					let oldButton = list.getElementsByClassName('action-extractImage-container')[0];
-					if(oldButton) oldButton.parentNode.removeChild(oldButton);
-
-					list.appendChild(createdButton);
 				}
 			}
 		};
