@@ -5,7 +5,7 @@
 // @namespace	http://zerono.cloud
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		2.8.3
+// @version		2.8.4
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -123,10 +123,6 @@
 			// return if media not found
 			if(imgs.length == 0 && simg.length == 0 && gif.length == 0) {
 				return undefined
-			}
-
-			for(let i = 0;i < ActionItem.length;i++) {
-				ActionItem[i].className = "tweet-action-item pull-left margin-r--5";
 			}
 
 			let getTweetElementByListElement = function(elm){
