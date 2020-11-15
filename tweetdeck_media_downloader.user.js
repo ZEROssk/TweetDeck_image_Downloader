@@ -206,7 +206,7 @@
 			lists = findNode.getElementsByClassName('js-tweet-actions tweet-actions');
 
 			if(lists.length == 0) {
-				lists = findNode.getElementsByClassName('tweet-detail-actions');
+				lists = findNode.getElementsByClassName('tweet-actions');
 			}
 
 			for(let i = 0;i < lists.length;i++){
