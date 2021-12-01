@@ -5,7 +5,7 @@
 // @namespace	http://zerono.cloud
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		2.8.4
+// @version		2.8.6
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -154,8 +154,8 @@
 			}
 
 			btn.addEventListener('click',function(event){
-				const imgRe = new RegExp('https?://pbs.twimg.com/media/[-_!~*\'()a-zA-Z0-9;\/:\@&=+\$,%#]+');
-				const imgReS = new RegExp('https?://pbs.twimg.com/media/[-_.!~*\'()a-zA-Z0-9;\/:\@&=+\$,%#]+');
+				const imgRe = new RegExp('https?://pbs.twimg.com/media/[-_a-zA-Z0-9]+');
+				const imgReS = new RegExp('https?://pbs.twimg.com/media/[-_a-zA-Z0-9]+');
 				// if not press shift key
 				if(!(event || window.event).shiftKey){
 					let tweetDivElement = getTweetElementByListElement(list);
@@ -187,9 +187,6 @@
 							let imgurl = imgs[i].getAttribute('style').match(imgRe)[0] + ':orig';
 							window.open(imgurl);
 						}
-					} else {
-						let gifurl = gif[0].getElementsByClassName('js-media-gif')[0].getAttribute('src');
-						window.open(gifurl);
 					}
 				}
 			});
