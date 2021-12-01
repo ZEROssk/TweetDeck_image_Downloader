@@ -5,7 +5,7 @@
 // @namespace	http://zerono.cloud
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		2.8.6
+// @version		2.9
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -117,11 +117,10 @@
 			// get photo container
 			let ActionItem = list.getElementsByClassName('tweet-action-item');
 			let imgs = list.parentNode.parentNode.parentNode.getElementsByClassName('js-media-image-link');
-			let simg = list.parentNode.parentNode.parentNode.getElementsByClassName('media-img');
 			let gif = list.parentNode.parentNode.parentNode.getElementsByClassName('js-media-gif-container');
 
 			// return if media not found
-			if(imgs.length == 0 && simg.length == 0 && gif.length == 0) {
+			if(imgs.length == 0 && gif.length == 0) {
 				return undefined
 			}
 
@@ -155,7 +154,6 @@
 
 			btn.addEventListener('click',function(event){
 				const imgRe = new RegExp('https?://pbs.twimg.com/media/[-_a-zA-Z0-9]+');
-				const imgReS = new RegExp('https?://pbs.twimg.com/media/[-_a-zA-Z0-9]+');
 				// if not press shift key
 				if(!(event || window.event).shiftKey){
 					let tweetDivElement = getTweetElementByListElement(list);
@@ -165,10 +163,7 @@
 					if(!originalTweetUserCheckByBlackList(userName)) return;
 
 					iframeClear();
-					if(simg.length != 0) {
-						let surl = simg[0].getAttribute('src').match(imgReS)[0]+".jpg";
-						iframeAdd(surl, userName, tweetId);
-					} else if(imgs.length != 0) {
+					if(imgs.length != 0) {
 						for(let i = 0;i < imgs.length;i++) {
 							var url = imgs[i].getAttribute('style').match(imgRe)[0]+".jpg";
 							iframeAdd(url, userName, tweetId);
@@ -178,13 +173,10 @@
 						window.open(gifurl);
 					}
 				}else{
-					if(simg.length != 0) {
-						let simgurl = simg[0].getAttribute('src').match(imgReS)[0]+".jpg";
-						window.open(simgurl);
-					} else if(imgs.length != 0) {
+					if(imgs.length != 0) {
 						let lastIndex = (imgs.length - 1);
 						for(let i = lastIndex;0 <= i;i--){
-							let imgurl = imgs[i].getAttribute('style').match(imgRe)[0] + ':orig';
+							let imgurl = imgs[i].getAttribute('style').match(imgRe)[0] + '.jpg';
 							window.open(imgurl);
 						}
 					}
