@@ -5,7 +5,7 @@
 // @namespace	http://zerono.cloud
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		2.9
+// @version		2.9.1
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -102,8 +102,8 @@
 
 
 		let originalTweetUserCheckByBlackList = function(userName){
-			if(BLACK_LIST.includes(userName)) {
-				if(confirm(userName + 'はBLACK_LISTに登録されています。\nダウンロードを中止しますか？')) {
+			if(BLACK_LIST.includes(userName)){
+				if(confirm(userName + 'はBLACK_LISTに登録されています。\nダウンロードを中止しますか？')){
 					return false;
 				}
 			}
@@ -120,7 +120,7 @@
 			let gif = list.parentNode.parentNode.parentNode.getElementsByClassName('js-media-gif-container');
 
 			// return if media not found
-			if(imgs.length == 0 && gif.length == 0) {
+			if(imgs.length == 0 && gif.length == 0){
 				return undefined
 			}
 
@@ -134,20 +134,18 @@
 
 			let btn = document.createElement('li');
 
-			btn.setAttribute('class', 'tweet-action-item position-rel pull-left margin-r--0');
+			btn.setAttribute('class', 'tweet-action-item position-rel pull-left');
 
-			if(gif.length == 0) {
+			if(gif.length == 0){
 				btn.innerHTML =
 					'<a class="tweet-action ">' +
 						'<i class="icon icon-image txt-center pull-left txt-size--17"></i>' +
-						'<span class="pull-right margin-l--2 margin-t--1 txt-size--12">' + imgs.length + '</span>' +
 					'</a>'
 				;
-			} else {
+			}else{
 				btn.innerHTML =
 					'<a class="tweet-action ">' +
 						'<i class="icon icon-image txt-center pull-left txt-size--17"></i>' +
-						'<span class="pull-right margin-l--2 margin-t--1 txt-size--12">' + gif.length + '</span>' +
 					'</a>'
 				;
 			}
@@ -163,17 +161,17 @@
 					if(!originalTweetUserCheckByBlackList(userName)) return;
 
 					iframeClear();
-					if(imgs.length != 0) {
+					if(imgs.length != 0){
 						for(let i = 0;i < imgs.length;i++) {
 							var url = imgs[i].getAttribute('style').match(imgRe)[0]+".jpg";
 							iframeAdd(url, userName, tweetId);
 						}
-					} else {
+					}else{
 						let gifurl = gif[0].getElementsByClassName('js-media-gif')[0].getAttribute('src');
 						window.open(gifurl);
 					}
 				}else{
-					if(imgs.length != 0) {
+					if(imgs.length != 0){
 						let lastIndex = (imgs.length - 1);
 						for(let i = lastIndex;0 <= i;i--){
 							let imgurl = imgs[i].getAttribute('style').match(imgRe)[0] + '.jpg';
@@ -194,7 +192,7 @@
 			// get action list
 			lists = findNode.getElementsByClassName('js-tweet-actions tweet-actions');
 
-			if(lists.length == 0) {
+			if(lists.length == 0){
 				lists = findNode.getElementsByClassName('tweet-actions');
 			}
 
