@@ -5,7 +5,7 @@
 // @namespace	http://zerono.cloud
 // @include     https://tweetdeck.twitter.com/*
 // @include		https://pbs.twimg.com/media/*
-// @version		2.9.1
+// @version		2.9.2
 // @grant		none
 // @license		MIT License
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -156,7 +156,7 @@
 				if(!(event || window.event).shiftKey){
 					let tweetDivElement = getTweetElementByListElement(list);
 					let tweetId = tweetDivElement.getAttribute('data-tweet-id');
-					let userName = tweetDivElement.getElementsByClassName('username')[0].textContent.substring(1);
+					let userName = tweetDivElement.getElementsByClassName('username')[tweetDivElement.getElementsByClassName('username').length-1].textContent.substring(1);
 
 					if(!originalTweetUserCheckByBlackList(userName)) return;
 
