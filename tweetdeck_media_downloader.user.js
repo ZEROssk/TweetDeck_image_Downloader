@@ -1,255 +1,180 @@
 // ==UserScript==
-// @name		Ez Twimg Downloader DECK
-// @description	TweetDeckの画像を簡単に保存するUserScriptです。
-// @author		ZEROssk
-// @namespace	http://zerono.cloud
-// @include     https://tweetdeck.twitter.com/*
-// @include		https://pbs.twimg.com/media/*
-// @version		2.9.2
-// @grant		none
-// @license		MIT License
+// @name        Ez Twimg Downloader DECK
+// @description TweetDeckの画像を簡単に保存するUserScriptです。
+// @author      00A0
+// @match       https://tweetdeck.twitter.com/*
+// @match       https://pbs.twimg.com/media/*
+// @version     3.0
+// @grant       none
+// @license     The Unlicense
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
 // ==/UserScript==
 
 // Original Code author
 //		yanorei32
 // Original Code
-//		https://gist.github.com/Yanorei32/ef72fa76511c1ce5d5d6d725c2fa8b88
+//		https://github.com/Yanorei32/EzTwimgDownloaderGen2
 
-;(function() {
-	'use strict';
+(function () {
+  'use strict';
 
-	// download filename format
-	// https://pbs.twimg.com/media/{randomImageNameWithoutExtension}.{extension} or
-	// https://pbs.twimg.com/media/{randomImageName}
-	let FILENAME_FORMAT = 'Twitter-{tweetId}-{userName}-{randomImageNameWithoutExtension}.{extension}';
+  // download filename format
+  // https://twitter.com/{userName}/status/{tweetId}
+  // https://pbs.twimg.com/media/{randomName}.{extension}
+  const FILENAME_FORMAT = 'Twitter-{tweetId}-{userName}-{randomName}.{extension}';
+  const IFRAME_NAME = 'EzTwimgDownloaderDeckIFrame';
 
-	let BLACK_LIST = [
-		'TwTimez',
-	];
+  if (window !== window.parent) {
+    const splittedName = window.name.split(',');
+    if (splittedName[0] != IFRAME_NAME) return;
 
-	// CONST VALUES
-	let SCRIPT_NAME	= 'EZ_Twitter_Image_Downloader_DECK';
-	let IFRAME_NAME	= SCRIPT_NAME + '_download_frame';
+    const linkElem = document.createElement('a');
+    linkElem.href = window.location.href;
+    linkElem.download = FILENAME_FORMAT
+      .replace(/{userName}/g, splittedName[1])
+      .replace(/{tweetId}/g, splittedName[2])
+      .replace(/{randomName}/g, splittedName[3])
+      .replace(/{extension}/g, splittedName[4]);
 
-	if(window !== window.parent){
-		// iframe functions
+    document.documentElement.appendChild(linkElem);
+    linkElem.click();
+  } else {
+    const processedLists = new WeakMap();
 
-		// check iframe name
-		if(window.name.split(',')[0] != IFRAME_NAME) return;
+    const addCSS = () => {
+      const btnCSS =
+        '<style>' +
+          '.download:hover>div>div>div{color: rgba(29, 161, 242, 1.0);}' +
+          '.download:hover>div>div>div>div>div{background-color: rgba(29, 161, 242, 0.1);}' +
+        '</style>'
+        ;
+      document.head.insertAdjacentHTML('beforeend', btnCSS);
+    };
 
-		// create link elem and download
-		(function() {
-			let linkElem = document.createElement('a');
+    const hiddenIframeWrapper = document.createElement('div');
+    document.documentElement.appendChild(hiddenIframeWrapper);
 
-			let userName = window.name.split(',')[1];
-			let tweetId = window.name.split(',')[2];
-			let randomImageName = (window.location.href.split('/').pop().split(':')[0]);
-			let randomImageNameWithoutExtension = randomImageName.slice(0, randomImageName.length - 4);
-			let extension = randomImageName.slice(-3);
+    const toArray = (arrayLikeObject) => {
+      return Array.prototype.slice.call(arrayLikeObject);
+    };
 
-			let filename = FILENAME_FORMAT;
+    const getArticleByChildElement = (e) => {
+      while (e.tagName != 'ARTICLE') {
+        e = e.parentElement;
+      }
+      return e;
+    };
 
-			linkElem.href = window.location.href;
+    const parseNewFormatURI = (uri) => {
+      const splittedURI = uri.split('/')[4].split('?');
+      return {
+        'randomName': splittedURI[0],
+        'extension': splittedURI[1].split('&')[0].split('=')[1],
+      };
+    };
 
-			filename = filename.replace(/{userName}/g, userName);
-			filename = filename.replace(/{tweetId}/g, tweetId);
-			filename = filename.replace(/{randomImageNameWithoutExtension}/g, randomImageNameWithoutExtension);
-			filename = filename.replace(/{randomImageName}/g, randomImageName);
-			filename = filename.replace(/{extension}/g, extension);
+    const getTweetInfoByImage = (e) => {
+      while (e.tagName != 'A') {
+        e = e.parentElement;
+      };
 
-			linkElem.download = filename;
+      const splittedHref = e.href.split('/');
+      return {
+        'displayName': splittedHref[3],
+        'tweetId': splittedHref[5],
+      };
+    };
 
-			document.documentElement.appendChild(linkElem);
+    const getImagesContainerByImageElement = (e) => {
+      while (e.tagName != 'A') {
+        e = e.parentElement;
+      };
+      return e.parentElement.parentElement.parentElement.parentElement;
+    };
 
-			linkElem.click();
+    const iframeClear = () => {
+      hiddenIframeWrapper.textContent = null;
+    };
 
-		})();
+    const iframeAdd = (url, displayName, tweetId, randomName, extension) => {
+      const iframe = document.createElement('iframe');
+      iframe.style.width = iframe.style.height = '0';
+      iframe.style.visibility = 'hidden';
+      iframe.src = url;
+      iframe.name = [IFRAME_NAME, displayName, tweetId, randomName, extension].join(',');
+      hiddenIframeWrapper.appendChild(iframe);
+    };
 
-	}else{
-		// parent window functions
+    const addButtons = (e) => {
+      //const imgs = e.parentNode.parentNode.parentNode.getElementsByClassName('js-media-image-link');
+      const imgs = document.getElementsByTagName('img');
+      if (imgs == undefined) return;
 
-		// init processed list
-		let processedLists = new WeakMap();
+      for (let i = 0; i < imgs.length; i++) {
+        const img = imgs[i];
+        if (img.alt != '画像') continue;
 
-		// iframe
-		let iframeDiv;
+        const article = getArticleByChildElement(img);
+        if (processedLists.has(article)) continue;
+        processedLists.set(article, 1);
 
-		// write div for iframe
-		(function(){
-			iframeDiv = document.createElement('div');
-			document.documentElement.appendChild(iframeDiv);
+        let buttonGr = article.querySelector('div[role="group"]:last-of-type, ul.tweet-actions, ul.tweet-detail-actions');
+        let buttonPNode = Array.from(buttonGr.querySelectorAll(':scope>div>div, li.tweet-action-item>a, li.tweet-detail-action-item>a')).pop().parentNode;
+        let button = buttonPNode.cloneNode(true);
+        button.querySelector('svg').innerHTML =
+          '<a class="tweet-action svgDownload">' +
+            '<path d="M3,14 v5 q0,2 2,2 h14 q2,0 2,-2 v-5 M7,10 l4,4 q1,1 2,0 l4,-4 M12,3 v11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />' +
+          '</a>'
+        ;
+        button.classList.add('download');
+        buttonGr.insertBefore(button, buttonPNode.nextSibling);
 
-		})();
+        button.addEventListener('click', () => {
+          const tweetImgs = getImagesContainerByImageElement(img).getElementsByTagName('img');
+          const tweetInfo = getTweetInfoByImage(img);
+          iframeClear();
 
-		let iframeClear = function(){
-			iframeDiv.textContent = null;
+          for (let j = 0; j < tweetImgs.length; j++) {
+            const parsedURI = parseNewFormatURI(tweetImgs[j].src);
+            const maximumQualityURI = `https://pbs.twimg.com/media/${parsedURI.randomName}.${parsedURI.extension}:orig`;
 
-		};
+            if (!(event || window.event).shiftKey) {
+              iframeAdd(
+                maximumQualityURI,
+                tweetInfo.displayName,
+                tweetInfo.tweetId,
+                parsedURI.randomName,
+                parsedURI.extension
+              );
+            } else {
+              window.open(maximumQualityURI);
+            };
+          }
+        });
+      }
+    };
 
-		let iframeAdd = function(imageBaseURL, userName, tweetId){
-			let iframe = document.createElement('iframe');
+    //const destroyPromotion = (e) => {
+    //  const spantags = e.getElementsByTagName('span');
+    //  //getArticleByChildElement(spantags[spantags.length-1]).parentElement.parentElement.parentElement.parentElement.textContent = null;
+    //};
 
-			iframe.style.width = iframe.style.height = '0';
-			iframe.style.visibility = 'hidden';
+    new MutationObserver((records) => {
+      records.forEach((record) => {
+        toArray(record.addedNodes).forEach((addedNode) => {
+          if (addedNode.nodeType != Node.ELEMENT_NODE) return;
 
-			iframe.src	= imageBaseURL;
-			iframe.name	= IFRAME_NAME + ',' + userName + ',' + tweetId;
-
-			iframeDiv.appendChild(iframe);
-
-		};
-
-
-		let originalTweetUserCheckByBlackList = function(userName){
-			if(BLACK_LIST.includes(userName)){
-				if(confirm(userName + 'はBLACK_LISTに登録されています。\nダウンロードを中止しますか？')){
-					return false;
-				}
-			}
-
-			return true;
-		};
-
-
-		// create button element
-		let createButton = function(list){
-			// get photo container
-			let ActionItem = list.getElementsByClassName('tweet-action-item');
-			let imgs = list.parentNode.parentNode.parentNode.getElementsByClassName('js-media-image-link');
-			let gif = list.parentNode.parentNode.parentNode.getElementsByClassName('js-media-gif-container');
-
-			// return if media not found
-			if(imgs.length == 0 && gif.length == 0){
-				return undefined
-			}
-
-			let getTweetElementByListElement = function(elm){
-				while(1){
-					if(elm.classList.contains('stream-item')) break;
-					elm = elm.parentNode;
-				}
-				return elm;
-			}
-
-			let btn = document.createElement('li');
-
-			btn.setAttribute('class', 'tweet-action-item position-rel pull-left');
-
-			if(gif.length == 0){
-				btn.innerHTML =
-					'<a class="tweet-action ">' +
-						'<i class="icon icon-image txt-center pull-left txt-size--17"></i>' +
-					'</a>'
-				;
-			}else{
-				btn.innerHTML =
-					'<a class="tweet-action ">' +
-						'<i class="icon icon-image txt-center pull-left txt-size--17"></i>' +
-					'</a>'
-				;
-			}
-
-			btn.addEventListener('click',function(event){
-				const imgRe = new RegExp('https?://pbs.twimg.com/media/[-_a-zA-Z0-9]+');
-				// if not press shift key
-				if(!(event || window.event).shiftKey){
-					let tweetDivElement = getTweetElementByListElement(list);
-					let tweetId = tweetDivElement.getAttribute('data-tweet-id');
-					let userName = tweetDivElement.getElementsByClassName('username')[tweetDivElement.getElementsByClassName('username').length-1].textContent.substring(1);
-
-					if(!originalTweetUserCheckByBlackList(userName)) return;
-
-					iframeClear();
-					if(imgs.length != 0){
-						for(let i = 0;i < imgs.length;i++) {
-							var url = imgs[i].getAttribute('style').match(imgRe)[0]+".jpg";
-							iframeAdd(url, userName, tweetId);
-						}
-					}else{
-						let gifurl = gif[0].getElementsByClassName('js-media-gif')[0].getAttribute('src');
-						window.open(gifurl);
-					}
-				}else{
-					if(imgs.length != 0){
-						let lastIndex = (imgs.length - 1);
-						for(let i = lastIndex;0 <= i;i--){
-							let imgurl = imgs[i].getAttribute('style').match(imgRe)[0] + '.jpg';
-							window.open(imgurl);
-						}
-					}
-				}
-			});
-
-			return btn;
-
-		};
-
-		// add buttons 2 elem
-		let addButtons = function(findNode){
-			let lists;
-
-			// get action list
-			lists = findNode.getElementsByClassName('js-tweet-actions tweet-actions');
-
-			if(lists.length == 0){
-				lists = findNode.getElementsByClassName('tweet-actions');
-			}
-
-			for(let i = 0;i < lists.length;i++){
-				let list = lists[i];
-
-				// check processed list
-				if(processedLists.has(list)) continue;
-
-				// set to processed list
-				processedLists.set(list, 1);
-
-				// create button
-				let createdButton = createButton(list);
-
-				// add button if createdButton is not undefined
-				if(createdButton != undefined){
-					// remove old button (perhaps a browser bug)
-					let oldButton = list.getElementsByClassName('ProfileTweet-action--ExtractImages')[0];
-					if(oldButton) oldButton.parentNode.removeChild(oldButton);
-
-					list.insertBefore(
-						createdButton,
-						list.getElementsByClassName('ProfileTweet-action--more')[0]
-					);
-
-				}
-			}
-		};
-
-		let toArray = function(array_like_object) {
-			return Array.prototype.slice.call(array_like_object);
-		};
-
-		// create mutation observer
-		new MutationObserver(function(records){
-			// loop each record
-			records.forEach(function(record){
-				// loop each added node
-				toArray(record.addedNodes).forEach(function(addedNode){
-					// return if node is not a element node
-					if(addedNode.nodeType != Node.ELEMENT_NODE) return;
-
-					addButtons(addedNode);
-
-				});
-			});
-		}).observe(
-			document.body,
-			{
-				childList: true,
-				subtree: true,
-			}
-		);
-
-		// add button
-		addButtons(document);
-	}
+          addButtons(addedNode);
+          //destroyPromotion(addedNode);
+        });
+      });
+    }).observe(
+      document.body,
+      {
+        childList: true,
+        subtree: true,
+      }
+    );
+    addCSS();
+  }
 })();
-
