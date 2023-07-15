@@ -4,7 +4,7 @@
 // @author      00A0
 // @match       https://tweetdeck.twitter.com/*
 // @match       https://pbs.twimg.com/media/*
-// @version     3.0
+// @version     3.1
 // @grant       none
 // @license     The Unlicense
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
@@ -106,13 +106,12 @@
     };
 
     const addButtons = (e) => {
-      //const imgs = e.parentNode.parentNode.parentNode.getElementsByClassName('js-media-image-link');
       const imgs = document.getElementsByTagName('img');
       if (imgs == undefined) return;
 
       for (let i = 0; i < imgs.length; i++) {
         const img = imgs[i];
-        if (img.alt != '画像') continue;
+        if (img.parentElement.getAttribute('data-testid') != "tweetPhoto") continue;
 
         const article = getArticleByChildElement(img);
         if (processedLists.has(article)) continue;
