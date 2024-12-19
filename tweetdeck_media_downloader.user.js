@@ -5,10 +5,11 @@
 // @match       https://tweetdeck.twitter.com/*
 // @match       https://pro.twitter.com/*
 // @match       https://pbs.twimg.com/media/*
-// @version     3.2
+// @version     3.3
 // @grant       GM_download
 // @license     The Unlicense
 // @updateURL   https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
+// @downloadURL https://github.com/ZEROssk/TweetDeck_image_Downloader/raw/master/tweetdeck_media_downloader.user.js
 // ==/UserScript==
 
 // Original Code author
@@ -28,8 +29,9 @@
   const addCSS = () => {
     const btnCSS =
       '<style>' +
-        '.download:hover>div>div>div{color: rgba(29, 161, 242, 1.0);}' +
-        '.download:hover>div>div>div>div>div{background-color: rgba(29, 161, 242, 0.1);}' +
+      '.download:hover>div>button>div>div{color: rgba(29, 161, 242, 1.0);}' +
+      '.download:hover>div>button>div>div>div{background-color: rgba(29, 161, 242, 0.1);}' +
+      '.download{margin-left: 3%;}' +
       '</style>'
       ;
     document.head.insertAdjacentHTML('beforeend', btnCSS);
